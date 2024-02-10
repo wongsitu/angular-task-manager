@@ -1,0 +1,22 @@
+<div class="card bg-white p-4 rounded shadow mb-4">
+  <ng-container *ngIf="!isEditing; else editMode">
+    <h2 class="text-xl font-bold">{{ item.name }}</h2>
+    <p>{{ item.description }}</p>
+    <p>Estimate: {{ item.estimate }}</p>
+    <button class="bg-blue-500 text-white px-4 py-2 rounded" (click)="startEditing()">Edit</button>
+  </ng-container>
+
+  <ng-template #editMode>
+    <p>{{item.state}}</p>
+    <label for="editName">Name:</label>
+    <input id="editName" class="border rounded p-2 mb-2" [(ngModel)]="item.name" />
+
+    <label for="description">Description:</label>
+    <textarea id="description" class="border rounded p-2 mb-2" [(ngModel)]="item.description"></textarea>
+
+    <label for="estimate">Estimate:</label>
+    <input id="estimate" class="border rounded p-2 mb-2" type="number" [(ngModel)]="item.estimate" />
+
+    <button class="bg-green-500 text-white px-4 py-2 rounded" (click)="stopEditing()">Save</button>
+  </ng-template>
+</div>
