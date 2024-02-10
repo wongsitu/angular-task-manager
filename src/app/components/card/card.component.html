@@ -1,22 +1,29 @@
-<div class="card bg-white p-4 rounded shadow mb-4">
+<div class="card bg-white p-4 rounded shadow mb-4 relative">
+  <button class="close-button absolute top-2 right-2 text-gray-600 hover:text-red-500" (click)="deleteCard()">X</button>
+
   <ng-container *ngIf="!isEditing; else editMode">
-    <h2 class="text-xl font-bold">{{ item.name }}</h2>
-    <p>{{ item.description }}</p>
+    <h2 class="text-xl font-bold">Name: {{ item.name }}</h2>
+    <p>Description: {{ item.description }}</p>
     <p>Estimate: {{ item.estimate }}</p>
-    <button class="bg-blue-500 text-white px-4 py-2 rounded" (click)="startEditing()">Edit</button>
+    <!-- <p>In planning since: {{ item.planningTime }}</p>
+    <p>In progress since: {{ item.inProgressTime }}</p>
+    <p>Completed since: {{ item.completedTime }}</p> -->
+    <button class="bg-blue-500 text-white px-4 py-2 rounded mt-4" (click)="startEditing()">Edit</button>
   </ng-container>
 
   <ng-template #editMode>
-    <p>{{item.state}}</p>
-    <label for="editName">Name:</label>
-    <input id="editName" class="border rounded p-2 mb-2" [(ngModel)]="item.name" />
+    <form [formGroup]="formState" (ngSubmit)="onSubmit()" class="mt-4">
+      <p class="text-gray-600">{{item.state}}</p>
+      <label for="name" class="block mt-2 text-sm font-medium text-gray-600">Name:</label>
+      <input id="name" class="border rounded p-2 w-full" formControlName="name" />
 
-    <label for="description">Description:</label>
-    <textarea id="description" class="border rounded p-2 mb-2" [(ngModel)]="item.description"></textarea>
+      <label for="description" class="block mt-2 text-sm font-medium text-gray-600">Description:</label>
+      <textarea id="description" class="border rounded p-2 w-full" formControlName="description"></textarea>
 
-    <label for="estimate">Estimate:</label>
-    <input id="estimate" class="border rounded p-2 mb-2" type="number" [(ngModel)]="item.estimate" />
+      <label for="estimate" class="block mt-2 text-sm font-medium text-gray-600">Estimate:</label>
+      <input id="estimate" class="border rounded p-2 w-full" type="number" formControlName="estimate" />
 
-    <button class="bg-green-500 text-white px-4 py-2 rounded" (click)="stopEditing()">Save</button>
+      <button class="bg-green-500 text-white px-4 py-2 rounded mt-4" type="submit">Save</button>
+    </form>
   </ng-template>
 </div>

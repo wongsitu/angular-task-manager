@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AddTaskFormComponent } from './components/add-task-form/add-task-form.component';
 import {
@@ -19,17 +19,21 @@ import { Task, TaskState } from './services/task.model';
   templateUrl: './app.component.html',
   styleUrl: './app.component.sass'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'task-tracker';
   planned: Task[] = [];
   completed: Task[] = [];
   inProgress: Task[] = [];
 
+  ngOnInit() {
+    this.taskService.getTasks()
+  }
+
   constructor(private taskService: TaskService) {
     this.taskService.tasksSubject$.subscribe((tasks) => {
-      this.planned = tasks.planned;
-      this.inProgress = tasks.inProgress;
-      this.completed = tasks.completed;
+      this.planned = tasks.filter((task) => task.state === 'Planned');
+      this.inProgress = tasks.filter((task) => task.state === 'InProgress');
+      this.completed = tasks.filter((task) => task.state === 'Completed');
     })
   }
 
@@ -38,7 +42,7 @@ export class AppComponent {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
       const updatedTask = { ...event.previousContainer.data[event.currentIndex], state: event.container.id as TaskState }
-      this.taskService.updateTaskState(updatedTask);
+      this.taskService.updateTask(updatedTask);
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,

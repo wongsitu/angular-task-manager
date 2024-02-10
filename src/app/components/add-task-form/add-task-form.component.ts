@@ -26,13 +26,42 @@ export class AddTaskFormComponent {
   });
 
   onSubmit() {
-    this.taskService.addTask(this.formState.value as Task);
-    this.formState.reset({
-      id: uuidv4(),
-      name: '',
-      description: '',
-      estimate: 0,
-      state: 'Planned',
+    let newTask: Task;
+    if (this.formState.value.state === 'Planned') {
+      newTask = {
+        ...this.formState.value,
+        inPlanningSince: new Date().toDateString(),
+      } as Task
+    } else if (this.formState.value.state === 'InProgress') {
+      newTask = {
+        ...this.formState.value,
+        inProgressSince: new Date().toDateString(),
+      } as Task
+    } else {
+      newTask = {
+        ...this.formState.value,
+        completedSince: new Date().toDateString(),
+      } as Task
+    }
+
+    this.taskService.createTask(newTask).subscribe({
+      next: (data) => {
+        if (data) {
+          const prevState = this.taskService.tasksSubjectSource.getValue()
+          this.taskService.tasksSubjectSource.next([...prevState, data]);
+
+          this.formState.reset({
+            id: uuidv4(),
+            name: '',
+            description: '',
+            estimate: 0,
+            state: 'Planned',
+          });
+        }
+      },
+      error: (error) => {
+        console.error('There was an error!', error);
+      },
     });
   }
 }

@@ -27,7 +27,8 @@
             "inlineStyleLanguage": "css",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/mockServiceWorker.js"
             ],
             "styles": [
               "src/styles.css"
@@ -92,7 +93,7 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": ["public/mockServiceWorker.js"]
           }
         }
       }

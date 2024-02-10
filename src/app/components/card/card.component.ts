@@ -1,24 +1,31 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Task } from '../../services/task.model';
+import { TaskService } from '../../services/task.service';
 
 @Component({
   selector: 'app-card',
   templateUrl: './card.component.html',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, ReactiveFormsModule],
   standalone: true
 })
-export class CardComponent {
+
+export class CardComponent implements OnInit, OnChanges  {
   @Input() item: Task = {
     id: '',
     name: '',
     description: '',
     estimate: 0,
     state: 'Planned',
+    inPlanningSince: undefined,
+    inProgressSince: undefined,
+    completedSince: undefined,
   };
 
   isEditing: boolean = false;
+
+  constructor(private taskService: TaskService, private formBuilder: FormBuilder) {}
 
   startEditing(): void {
     this.isEditing = true;
@@ -26,5 +33,58 @@ export class CardComponent {
 
   stopEditing(): void {
     this.isEditing = false;
+  }
+
+  ngOnInit(): void {
+      console.log(this.item);
+  }
+
+  formState = this.formBuilder.group({
+    name: [''],
+    description: [''],
+    estimate: [0],
+  });
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['item']) {
+      this.updateFormControls();
+    }
+  }
+
+  updateFormControls(): void {
+    this.formState.patchValue({
+      name: this.item.name,
+      description: this.item.description,
+      estimate: this.item.estimate,
+    });
+  }
+
+  deleteCard(): void {
+    this.taskService.deleteTask(this.item).subscribe({
+      next: (data) => {
+        const prevState = this.taskService.tasksSubjectSource.getValue()
+        this.taskService.tasksSubjectSource.next(prevState.filter((t) => t.id !== data.id));
+      },
+      error: (error) => {
+        console.error('There was an error!', error);
+      },
+    });
+  }
+
+  onSubmit(): void {
+    const updatedTask = {
+      ...this.item,
+      ...this.formState.value,
+    } as Task;
+    this.taskService.updateTask(updatedTask).subscribe({
+      next: (data) => {
+        const prevState = this.taskService.tasksSubjectSource.getValue()
+        this.taskService.tasksSubjectSource.next(prevState.map((t) => t.id === data.id ? data : t));
+        this.stopEditing();
+      },
+      error: (error) => {
+        console.error('There was an error!', error);
+      },
+    })
   }
 }

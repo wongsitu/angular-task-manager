@@ -1,58 +1,101 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Task, TaskState } from './task.model';
+import { Task } from './task.model';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TaskService {
-  private tasksSubjectSource = new BehaviorSubject<{
-    planned: Task[];
-    inProgress: Task[];
-    completed: Task[];
-  }>({
-    planned: [],
-    inProgress: [],
-    completed: [],
-  });
+  public tasksSubjectSource = new BehaviorSubject<Task[]>([]);
   public tasksSubject$ = this.tasksSubjectSource.asObservable();
 
-  public addTask(task: Task) {
-    const prevState = this.tasksSubjectSource.getValue()
+  constructor(private http: HttpClient) {}
 
-    if (task.state === 'Planned') {
-      this.tasksSubjectSource.next({
-        ...prevState,
-        planned: [...prevState.planned, task],
-      });
-    }
-    if (task.state === 'InProgress') {
-      this.tasksSubjectSource.next({
-        ...prevState,
-        inProgress: [...prevState.inProgress, task],
-      });
-    }
-    if (task.state === 'Completed') {
-      this.tasksSubjectSource.next({
-        ...prevState,
-        completed: [...prevState.completed, task],
-      });
-    }
+  getTasks() {
+    return this.http.get<Task[]>('/tasks').subscribe({
+      next: (data) => {
+        this.tasksSubjectSource.next(data);
+      },
+      error: (error) => {
+        console.error('There was an error!', error);
+      },
+    })
   }
 
-  public removeTask(task: Task) {
-    const prevState = this.tasksSubjectSource.getValue()
-
-    this.tasksSubjectSource.next({
-      ...prevState,
-      planned: prevState.planned.filter((t) => t.id !== task.id),
-      inProgress: prevState.inProgress.filter((t) => t.id !== task.id),
-      completed: prevState.completed.filter((t) => t.id !== task.id),
-    });
+  createTask(task: Task) {
+    return this.http.post<Task>('/tasks', task)
   }
 
-  public updateTaskState(task: Task) {
-    this.removeTask(task)
-    this.addTask(task);
+  deleteTask(task: Task) {
+    return this.http.delete<Task>(`/tasks/${task.id}`)
   }
+
+  updateTask({ id, ...rest }: Task) {
+    return this.http.put<Task>(`/tasks/${id}`, rest)
+  }
+
+  // public addTask(task: Task) {
+  //   const prevState = this.tasksSubjectSource.getValue()
+  //   this.tasksSubjectSource.next([...prevState, task]);
+  // }
+
+  // public removeTask(task: Task) {
+  //   const prevState = this.tasksSubjectSource.getValue()
+  //   this.tasksSubjectSource.next(prevState.filter((t) => t.id !== task.id));
+  // }
+
+  // public updateTask(task: Task) {
+  //   const prevState = this.tasksSubjectSource.getValue()
+  //   let newTask = { ...task };
+  //   const prevTask = prevState.find((t) => t.id === task.id);
+
+  //   if (prevTask?.state !== newTask.state) {
+  //     const currentDate = new Date();
+  //     if (newTask?.state === 'Planned') {
+  //       newTask.inPlanningSince = currentDate.toDateString();
+
+  //       // if (prevTask?.state === 'InProgress' && prevTask.inProgressSince) {
+  //       //   newTask.inProgressTime += Math.round((currentDate.getTime() - prevTask.inProgressSince.getTime()) / 1000);
+  //       // }
+  //       // else if (prevTask?.state === 'Completed' && prevTask.completedSince) {
+  //       //   newTask.completedTime += Math.round((currentDate.getTime() - prevTask.completedSince.getTime()) / 1000);
+  //       // }
+  //       // else if (prevTask?.state === 'Planned' && prevTask.inPlanningSince) {
+  //       //   newTask.planningTime += Math.round((currentDate.getTime() - prevTask.inPlanningSince.getTime()) / 1000);
+  //       // }
+
+  //     } else if (newTask?.state === 'InProgress') {
+  //       newTask.inProgressSince = currentDate.toDateString();
+
+  //       // if (prevTask?.state === 'InProgress' && prevTask.inProgressSince) {
+  //       //   newTask.inProgressTime += Math.round((currentDate.getTime() - prevTask.inProgressSince.getTime()) / 1000);
+  //       // }
+  //       // else if (prevTask?.state === 'Completed' && prevTask.completedSince) {
+  //       //   newTask.completedTime += Math.round((currentDate.getTime() - prevTask.completedSince.getTime()) / 1000);
+  //       // }
+  //       // else if (prevTask?.state === 'Planned' && prevTask.inPlanningSince) {
+  //       //   newTask.planningTime += Math.round((currentDate.getTime() - prevTask.inPlanningSince.getTime()) / 1000);
+  //       // }
+
+  //     } else {
+  //       newTask.completedSince = currentDate.toDateString();
+
+  //       // if (prevTask?.state === 'InProgress' && prevTask.inProgressSince) {
+  //       //   newTask.inProgressTime += Math.round((currentDate.getTime() - prevTask.inProgressSince.getTime()) / 1000);
+  //       // }
+  //       // else if (prevTask?.state === 'Completed' && prevTask.completedSince) {
+  //       //   newTask.completedTime += Math.round((currentDate.getTime() - prevTask.completedSince.getTime()) / 1000);
+  //       // }
+  //       // else if (prevTask?.state === 'Planned' && prevTask.inPlanningSince) {
+  //       //   newTask.planningTime += Math.round((currentDate.getTime() - prevTask.inPlanningSince.getTime()) / 1000);
+  //       // }
+  //     }
+  //   }
+
+  //   this.tasksSubjectSource.next(prevState.map((t) => (t.id === task.id ? newTask : t)));
+
+  //   // Do an http call to update the task in the backend
+
+  // }
 }
