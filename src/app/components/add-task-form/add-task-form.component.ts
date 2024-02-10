@@ -1,14 +1,14 @@
 import { v4 as uuidv4 } from 'uuid';
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { TaskService } from '../../services/task.service';
 import { Task } from '../../services/task.model';
 
 @Component({
   selector: 'add-task-form',
   templateUrl: './add-task-form.component.html',
-  imports: [FormsModule, CommonModule, ReactiveFormsModule ],
+  imports: [CommonModule, ReactiveFormsModule ],
   standalone: true
 })
 export class AddTaskFormComponent {
@@ -26,25 +26,7 @@ export class AddTaskFormComponent {
   });
 
   onSubmit() {
-    let newTask: Task;
-    if (this.formState.value.state === 'Planned') {
-      newTask = {
-        ...this.formState.value,
-        inPlanningSince: new Date().toDateString(),
-      } as Task
-    } else if (this.formState.value.state === 'InProgress') {
-      newTask = {
-        ...this.formState.value,
-        inProgressSince: new Date().toDateString(),
-      } as Task
-    } else {
-      newTask = {
-        ...this.formState.value,
-        completedSince: new Date().toDateString(),
-      } as Task
-    }
-
-    this.taskService.createTask(newTask).subscribe({
+    this.taskService.createTask(this.formState.value as Task).subscribe({
       next: (data) => {
         if (data) {
           const prevState = this.taskService.tasksSubjectSource.getValue()

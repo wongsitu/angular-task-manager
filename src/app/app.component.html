@@ -1,8 +1,11 @@
 <div class="p-4">
   <add-task-form></add-task-form>
   <div class="grid grid-cols-3 gap-4">
-      <div class="example-container">
-      <h2 class="text-xl font-bold mb-4">Planned</h2>
+    <div>
+      <div class="flex items-center justify-around mb-4">
+        <h2 class="text-xl font-bold">Planned</h2>
+        <p class="text-gray-600">Total hours: {{ totalPlannedHours }}</p>
+      </div>
       <div
         id="Planned"
         cdkDropList
@@ -16,8 +19,11 @@
         }
       </div>
     </div>
-    <div class="example-container">
-      <h2 class="text-xl font-bold mb-4">In progress</h2>
+    <div>
+      <div class="flex items-center justify-around mb-4">
+        <h2 class="text-xl font-bold">In progress</h2>
+        <p class="text-gray-600">Total hours: {{ totalInProgressHours }}</p>
+      </div>
       <div
         id="InProgress"
         cdkDropList
@@ -31,8 +37,11 @@
         }
       </div>
     </div>
-    <div class="example-container">
-      <h2 class="text-xl font-bold mb-4">Completed</h2>
+    <div>
+      <div class="flex items-center justify-around mb-4">
+        <h2 class="text-xl font-bold">Completed</h2>
+        <p class="text-gray-600">Total hours: {{ totalCompletedHours }}</p>
+      </div>
       <div
         id="Completed"
         cdkDropList

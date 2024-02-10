@@ -1,4 +1,5 @@
-import { factory, primaryKey, nullable  } from '@mswjs/data'
+import { factory, primaryKey } from '@mswjs/data'
+import { v4 as uuidv4 } from 'uuid';
 
 export const db = factory({
   task: {
@@ -7,25 +8,13 @@ export const db = factory({
     description: String,
     estimate: Number,
     state: String,
-    inPlanningSince: nullable(Date),
-    inProgressSince: nullable(Date),
-    completedSince: nullable(Date),
-    planningTime: Number,
-    inProgressTime: Number,
-    completedTime: Number,
   },
 })
 
 db.task.create({
-  id: '1',
+  id: uuidv4(),
   name: 'First task',
   description: 'This is the first task',
   estimate: 5,
   state: 'Planned',
-  inPlanningSince: new Date().toString(),
-  inProgressSince: null,
-  completedSince: null,
-  planningTime: 0,
-  inProgressTime: 0,
-  completedTime: 0,
 })

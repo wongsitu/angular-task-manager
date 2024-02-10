@@ -1,26 +1,23 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Task } from '../../services/task.model';
 import { TaskService } from '../../services/task.service';
 
 @Component({
   selector: 'app-card',
   templateUrl: './card.component.html',
-  imports: [FormsModule, CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   standalone: true
 })
 
-export class CardComponent implements OnInit, OnChanges  {
+export class CardComponent implements OnChanges  {
   @Input() item: Task = {
     id: '',
     name: '',
     description: '',
     estimate: 0,
     state: 'Planned',
-    inPlanningSince: undefined,
-    inProgressSince: undefined,
-    completedSince: undefined,
   };
 
   isEditing: boolean = false;
@@ -33,10 +30,6 @@ export class CardComponent implements OnInit, OnChanges  {
 
   stopEditing(): void {
     this.isEditing = false;
-  }
-
-  ngOnInit(): void {
-      console.log(this.item);
   }
 
   formState = this.formBuilder.group({
@@ -76,15 +69,7 @@ export class CardComponent implements OnInit, OnChanges  {
       ...this.item,
       ...this.formState.value,
     } as Task;
-    this.taskService.updateTask(updatedTask).subscribe({
-      next: (data) => {
-        const prevState = this.taskService.tasksSubjectSource.getValue()
-        this.taskService.tasksSubjectSource.next(prevState.map((t) => t.id === data.id ? data : t));
-        this.stopEditing();
-      },
-      error: (error) => {
-        console.error('There was an error!', error);
-      },
-    })
+    this.taskService.updateTask(updatedTask)
+    this.stopEditing();
   }
 }

@@ -57,18 +57,6 @@ export const handlers = [
       }
     })
 
-    // const currentDate = new Date();
-
-    // let newTask = { ...task };
-
-    // if (task.state === 'Planned') {
-    //   newTask.inPlanningSince = currentDate.toDateString();
-    // } else if (task.state === 'InProgress') {
-    //   newTask.inProgressSince = currentDate.toDateString();
-    // } else {
-    //   newTask.completedSince = currentDate.toDateString();
-    // }
-
     const newTask = db.task.update({
       where: {
         id: {
@@ -78,9 +66,6 @@ export const handlers = [
       data: {
         ...prevTask,
         ...task,
-        // planningTime: prevTask.planningTime + newTask.planningTime,
-        // inProgressTime: prevTask.inProgressTime + newTask.inProgressTime,
-        // completedTime: prevTask.completedTime + newTask.completedTime,
       }
     })
 

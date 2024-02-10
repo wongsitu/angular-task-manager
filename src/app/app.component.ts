@@ -17,7 +17,6 @@ import { Task, TaskState } from './services/task.model';
   standalone: true,
   imports: [RouterOutlet, AddTaskFormComponent, CdkDropList, CdkDrag, CardComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.sass'
 })
 export class AppComponent implements OnInit {
   title = 'task-tracker';
@@ -25,23 +24,32 @@ export class AppComponent implements OnInit {
   completed: Task[] = [];
   inProgress: Task[] = [];
 
-  ngOnInit() {
-    this.taskService.getTasks()
-  }
+  totalPlannedHours: number = 0;
+  totalInProgressHours: number = 0;
+  totalCompletedHours: number = 0;
 
   constructor(private taskService: TaskService) {
     this.taskService.tasksSubject$.subscribe((tasks) => {
       this.planned = tasks.filter((task) => task.state === 'Planned');
       this.inProgress = tasks.filter((task) => task.state === 'InProgress');
       this.completed = tasks.filter((task) => task.state === 'Completed');
+
+      this.totalPlannedHours = this.planned.reduce((acc, task) => acc + task.estimate, 0);
+      this.totalInProgressHours = this.inProgress.reduce((acc, task) => acc + task.estimate, 0);
+      this.totalCompletedHours = this.completed.reduce((acc, task) => acc + task.estimate, 0);
     })
+  }
+
+  ngOnInit() {
+    this.taskService.getTasks()
   }
 
   drop(event: CdkDragDrop<Task[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      const updatedTask = { ...event.previousContainer.data[event.currentIndex], state: event.container.id as TaskState }
+      const updatedTask = { ...event.previousContainer.data[event.previousIndex], state: event.container.id as TaskState }
+
       this.taskService.updateTask(updatedTask);
       transferArrayItem(
         event.previousContainer.data,

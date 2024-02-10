@@ -6,7 +6,4 @@ export interface Task {
   description: string;
   estimate: number;
   state: TaskState;
-  inPlanningSince: string | undefined;
-  inProgressSince: string | undefined;
-  completedSince: string | undefined;
 }
