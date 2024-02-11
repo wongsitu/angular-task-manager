@@ -28,7 +28,7 @@ export class BoardPageComponent implements OnInit {
   totalCompletedHours: number = 0;
 
   constructor(private taskService: TaskService) {
-    this.taskService.tasksSubjectSource.subscribe((tasks) => {
+    this.taskService.tasksSubject$.subscribe((tasks) => {
       this.planned = tasks.filter((task) => task.state === 'Planned');
       this.inProgress = tasks.filter((task) => task.state === 'InProgress');
       this.completed = tasks.filter((task) => task.state === 'Completed');

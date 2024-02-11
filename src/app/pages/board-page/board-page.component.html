@@ -10,7 +10,7 @@
       #plannedList="cdkDropList"
       [cdkDropListData]="planned"
       [cdkDropListConnectedTo]="[inProgressList, completedList]"
-      class="bg-gray-200 p-4 rounded shadow min-h-24"
+      class="bg-gray-200 p-4 rounded shadow min-h-60"
       (cdkDropListDropped)="drop($event)">
       @for (item of planned; track item) {
         <app-card cdkDrag [item]="item"></app-card>
@@ -28,7 +28,7 @@
       #inProgressList="cdkDropList"
       [cdkDropListData]="inProgress"
       [cdkDropListConnectedTo]="[plannedList, completedList]"
-      class="bg-gray-200 p-4 rounded shadow min-h-24"
+      class="bg-gray-200 p-4 rounded shadow min-h-60"
       (cdkDropListDropped)="drop($event)">
       @for (item of inProgress; track item) {
         <app-card cdkDrag [item]="item"></app-card>
@@ -46,7 +46,7 @@
       #completedList="cdkDropList"
       [cdkDropListData]="completed"
       [cdkDropListConnectedTo]="[plannedList, inProgressList]"
-      class="bg-gray-200 p-4 rounded shadow min-h-24"
+      class="bg-gray-200 p-4 rounded shadow min-h-60"
       (cdkDropListDropped)="drop($event)">
       @for (item of completed; track item) {
         <app-card cdkDrag [item]="item"></app-card>

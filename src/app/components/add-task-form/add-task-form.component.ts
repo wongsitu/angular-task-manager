@@ -26,24 +26,13 @@ export class AddTaskFormComponent {
   });
 
   onSubmit() {
-    this.taskService.createTask(this.formState.value as Task).subscribe({
-      next: (data) => {
-        if (data) {
-          const prevState = this.taskService.tasksSubjectSource.getValue()
-          this.taskService.tasksSubjectSource.next([...prevState, data]);
-
-          this.formState.reset({
-            id: uuidv4(),
-            name: '',
-            description: '',
-            estimate: 0,
-            state: 'Planned',
-          });
-        }
-      },
-      error: (error) => {
-        console.error('There was an error!', error);
-      },
+    this.taskService.createTask(this.formState.value as Task);
+    this.formState.reset({
+      id: uuidv4(),
+      name: '',
+      description: '',
+      estimate: 0,
+      state: 'Planned',
     });
   }
 }

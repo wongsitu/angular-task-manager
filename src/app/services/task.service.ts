@@ -8,8 +8,8 @@ import { TaskSchema, TaskListSchema } from './task.schemas';
   providedIn: 'root',
 })
 export class TaskService {
-  public tasksSubjectSource = new BehaviorSubject<Task[]>([]);
-  public tasksSubject$ = this.tasksSubjectSource.asObservable();
+  private _tasksSubjectSource = new BehaviorSubject<Task[]>([]);
+  public tasksSubject$ = this._tasksSubjectSource.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -18,7 +18,7 @@ export class TaskService {
       .pipe(map(response => TaskListSchema.parse(response)))
       .subscribe({
         next: (data) => {
-          this.tasksSubjectSource.next(data);
+          this._tasksSubjectSource.next(data);
         },
         error: (error) => {
           console.error('There was an error!', error);
@@ -30,6 +30,15 @@ export class TaskService {
     const payload = TaskSchema.parse(task);
     return this.http.post('/tasks', payload)
       .pipe(map(response => TaskSchema.parse(response)))
+      .subscribe({
+        next: (data) => {
+          const prevState = this._tasksSubjectSource.getValue()
+          this._tasksSubjectSource.next([...prevState, data]);
+        },
+        error: (error) => {
+          console.error('There was an error!', error);
+        },
+      })
   }
 
   deleteTask(task: Task) {
@@ -37,8 +46,8 @@ export class TaskService {
       .pipe(map(response => TaskSchema.parse(response)))
       .subscribe({
         next: (data) => {
-          const prevState = this.tasksSubjectSource.getValue()
-          this.tasksSubjectSource.next(prevState.filter((t) => t.id !== data.id));
+          const prevState = this._tasksSubjectSource.getValue()
+          this._tasksSubjectSource.next(prevState.filter((t) => t.id !== data.id));
         },
         error: (error) => {
           console.error('There was an error!', error);
@@ -54,8 +63,8 @@ export class TaskService {
       .pipe(map(response => TaskSchema.parse(response)))
       .subscribe({
         next: (data) => {
-          const prevState = this.tasksSubjectSource.getValue()
-          this.tasksSubjectSource.next(prevState.map((t) => t.id === data.id ? data : t));
+          const prevState = this._tasksSubjectSource.getValue()
+          this._tasksSubjectSource.next(prevState.map((t) => t.id === data.id ? data : t));
         },
         error: (error) => {
           console.error('There was an error!', error);
