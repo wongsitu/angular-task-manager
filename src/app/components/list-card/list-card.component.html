@@ -1,7 +1,7 @@
 <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl mb-4">
   <div class="p-8 relative">
     <button class="absolute top-0 right-0 p-2" (click)="onDelete()">X</button>
-    <div class="uppercase tracking-wide text-md font-semibold">{{ item.name }}</div>
+    <div class="tracking-wide text-md font-semibold">{{ item.name }}</div>
     <p class="mt-2 text-gray-500">{{ item.description }}</p>
     <div class="mt-4 text-gray-700">Estimate: {{ item.estimate }}</div>
     <div class="mt-4">
@@ -9,7 +9,7 @@
       <select id="state" [(ngModel)]="item.state" (change)="onStateChange($event)" class="mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-indigo-300">
         <option value="Planned">Planned</option>
         <option value="InProgress">In Progress</option>
-        <option value="Completed">Done</option>
+        <option value="Completed">Completed</option>
       </select>
     </div>
   </div>

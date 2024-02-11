@@ -1,9 +1,8 @@
-export type TaskState = 'Planned' | 'InProgress' | 'Completed';
+import { z } from 'zod';
+import { TaskListSchema, TaskSchema, TaskStateSchema } from './task.schemas'
 
-export interface Task {
-  id: string;
-  name: string;
-  description: string;
-  estimate: number;
-  state: TaskState;
-}
+export type TaskState = z.infer<typeof TaskStateSchema>;
+
+export type Task = z.infer<typeof TaskSchema>;
+
+export type TaskList = z.infer<typeof TaskListSchema>;
