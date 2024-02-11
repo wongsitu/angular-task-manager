@@ -13,12 +13,10 @@ export class AppComponent {
   constructor(private router: Router) {}
 
   navigateToHome(): void {
-    // Navigate to the root/home page
     this.router.navigate(['']);
   }
 
   navigateToList(): void {
-    // Navigate to the "list" page
     this.router.navigate(['/list']);
   }
 }
