@@ -53,15 +53,7 @@ export class CardComponent implements OnChanges  {
   }
 
   deleteCard(): void {
-    this.taskService.deleteTask(this.item).subscribe({
-      next: (data) => {
-        const prevState = this.taskService.tasksSubjectSource.getValue()
-        this.taskService.tasksSubjectSource.next(prevState.filter((t) => t.id !== data.id));
-      },
-      error: (error) => {
-        console.error('There was an error!', error);
-      },
-    });
+    this.taskService.deleteTask(this.item);
   }
 
   onSubmit(): void {

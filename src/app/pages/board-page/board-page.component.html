@@ -1,0 +1,56 @@
+<div class="grid grid-cols-3 gap-4">
+  <div>
+    <div class="flex items-center justify-around mb-4">
+      <h2 class="text-xl font-bold">Planned</h2>
+      <p class="text-gray-600">Total hours: {{ totalPlannedHours }}</p>
+    </div>
+    <div
+      id="Planned"
+      cdkDropList
+      #plannedList="cdkDropList"
+      [cdkDropListData]="planned"
+      [cdkDropListConnectedTo]="[inProgressList, completedList]"
+      class="bg-gray-200 p-4 rounded shadow min-h-24"
+      (cdkDropListDropped)="drop($event)">
+      @for (item of planned; track item) {
+        <app-card cdkDrag [item]="item"></app-card>
+      }
+    </div>
+  </div>
+  <div>
+    <div class="flex items-center justify-around mb-4">
+      <h2 class="text-xl font-bold">In progress</h2>
+      <p class="text-gray-600">Total hours: {{ totalInProgressHours }}</p>
+    </div>
+    <div
+      id="InProgress"
+      cdkDropList
+      #inProgressList="cdkDropList"
+      [cdkDropListData]="inProgress"
+      [cdkDropListConnectedTo]="[plannedList, completedList]"
+      class="bg-gray-200 p-4 rounded shadow min-h-24"
+      (cdkDropListDropped)="drop($event)">
+      @for (item of inProgress; track item) {
+        <app-card cdkDrag [item]="item"></app-card>
+      }
+    </div>
+  </div>
+  <div>
+    <div class="flex items-center justify-around mb-4">
+      <h2 class="text-xl font-bold">Completed</h2>
+      <p class="text-gray-600">Total hours: {{ totalCompletedHours }}</p>
+    </div>
+    <div
+      id="Completed"
+      cdkDropList
+      #completedList="cdkDropList"
+      [cdkDropListData]="completed"
+      [cdkDropListConnectedTo]="[plannedList, inProgressList]"
+      class="bg-gray-200 p-4 rounded shadow min-h-24"
+      (cdkDropListDropped)="drop($event)">
+      @for (item of completed; track item) {
+        <app-card cdkDrag [item]="item"></app-card>
+      }
+    </div>
+  </div>
+</div>

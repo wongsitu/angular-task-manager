@@ -28,7 +28,15 @@ export class TaskService {
   }
 
   deleteTask(task: Task) {
-    return this.http.delete<Task>(`/tasks/${task.id}`)
+    return this.http.delete<Task>(`/tasks/${task.id}`).subscribe({
+      next: (data) => {
+        const prevState = this.tasksSubjectSource.getValue()
+        this.tasksSubjectSource.next(prevState.filter((t) => t.id !== data.id));
+      },
+      error: (error) => {
+        console.error('There was an error!', error);
+      },
+    })
   }
 
   updateTask({ id, ...rest }: Task) {

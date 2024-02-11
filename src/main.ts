@@ -1,8 +1,8 @@
 import { bootstrapApplication } from '@angular/platform-browser'
 import { isDevMode } from '@angular/core'
-import { provideHttpClient } from '@angular/common/http'
 
 import { AppComponent } from './app/app.component'
+import { appConfig } from './app/app.config'
 
 async function prepareApp() {
   if (isDevMode()) {
@@ -14,7 +14,5 @@ async function prepareApp() {
 }
 
 prepareApp().then(() => {
-  bootstrapApplication(AppComponent, {
-    providers: [provideHttpClient()],
-  })
+  bootstrapApplication(AppComponent, appConfig)
 })
