@@ -19,7 +19,7 @@
       <label for="estimate" class="block mt-2 text-sm font-medium text-gray-600">Estimate:</label>
       <input id="estimate" class="border rounded p-2 w-full" type="number" formControlName="estimate" />
 
-      <button class="bg-green-500 text-white px-4 py-2 rounded mt-4" type="submit">Save</button>
+      <button class="bg-green-500 disabled:bg-green-300 text-white px-4 py-2 rounded mt-4" type="submit" [disabled]="!formState.valid">Save</button>
     </form>
   </ng-template>
 </div>

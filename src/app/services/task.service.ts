@@ -3,6 +3,7 @@ import { BehaviorSubject, map } from 'rxjs';
 import { Task } from './task.model';
 import { HttpClient } from '@angular/common/http';
 import { TaskSchema, TaskListSchema } from './task.schemas';
+import { ZodError } from 'zod';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +21,7 @@ export class TaskService {
         next: (data) => {
           this._tasksSubjectSource.next(data);
         },
-        error: (error) => {
+        error: (error: ZodError['errors']) => {
           console.error('There was an error!', error);
         },
       })
@@ -35,7 +36,7 @@ export class TaskService {
           const prevState = this._tasksSubjectSource.getValue()
           this._tasksSubjectSource.next([...prevState, data]);
         },
-        error: (error) => {
+        error: (error: ZodError['errors']) => {
           console.error('There was an error!', error);
         },
       })
@@ -49,7 +50,7 @@ export class TaskService {
           const prevState = this._tasksSubjectSource.getValue()
           this._tasksSubjectSource.next(prevState.filter((t) => t.id !== data.id));
         },
-        error: (error) => {
+        error: (error: ZodError['errors']) => {
           console.error('There was an error!', error);
         },
       })
@@ -66,7 +67,7 @@ export class TaskService {
           const prevState = this._tasksSubjectSource.getValue()
           this._tasksSubjectSource.next(prevState.map((t) => t.id === data.id ? data : t));
         },
-        error: (error) => {
+        error: (error: ZodError['errors']) => {
           console.error('There was an error!', error);
         },
       })

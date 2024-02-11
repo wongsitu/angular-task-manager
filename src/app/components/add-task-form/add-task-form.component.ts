@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TaskService } from '../../services/task.service';
 import { Task } from '../../services/task.model';
 
@@ -19,10 +19,10 @@ export class AddTaskFormComponent {
 
   formState = this.formBuilder.group({
     id: [uuidv4()],
-    name: [''],
-    description: [''],
-    estimate: [0],
-    state: ['Planned'],
+    name: ['', Validators.required],
+    description: ['', Validators.required],
+    estimate: [0, Validators.required],
+    state: ['Planned', Validators.required],
   });
 
   onSubmit() {

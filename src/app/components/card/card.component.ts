@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Task } from '../../services/task.model';
 import { TaskService } from '../../services/task.service';
 
@@ -33,9 +33,9 @@ export class CardComponent implements OnChanges  {
   }
 
   formState = this.formBuilder.group({
-    name: [''],
-    description: [''],
-    estimate: [0],
+    name: ['', Validators.required],
+    description: ['', Validators.required],
+    estimate: [0, Validators.required],
   });
 
   ngOnChanges(changes: SimpleChanges): void {
