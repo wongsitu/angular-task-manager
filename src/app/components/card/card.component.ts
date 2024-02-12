@@ -3,6 +3,7 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Task } from '../../services/task.model';
 import { TaskService } from '../../services/task.service';
+import { formFieldGreaterThan } from '../../utils/formFieldGreaterThan';
 
 @Component({
   selector: 'app-card',
@@ -35,7 +36,7 @@ export class CardComponent implements OnChanges  {
   formState = this.formBuilder.group({
     name: ['', Validators.required],
     description: ['', Validators.required],
-    estimate: [0, Validators.required],
+    estimate: [0, [Validators.required, formFieldGreaterThan]],
   });
 
   ngOnChanges(changes: SimpleChanges): void {

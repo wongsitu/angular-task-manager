@@ -4,6 +4,7 @@ import { Component, Input } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TaskService } from '../../services/task.service';
 import { Task } from '../../services/task.model';
+import { formFieldGreaterThan } from '../../utils/formFieldGreaterThan';
 
 @Component({
   selector: 'add-task-form',
@@ -21,7 +22,7 @@ export class AddTaskFormComponent {
     id: [uuidv4()],
     name: ['', Validators.required],
     description: ['', Validators.required],
-    estimate: [0, Validators.required],
+    estimate: [0, [Validators.required, formFieldGreaterThan]],
     state: ['Planned', Validators.required],
   });
 

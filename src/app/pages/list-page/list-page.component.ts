@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
 import { Task } from '../../services/task.model';
 import { NgChartsModule } from 'ng2-charts';
-import { ChartConfiguration } from 'chart.js';
 
 @Component({
   selector: 'app-list-page',
