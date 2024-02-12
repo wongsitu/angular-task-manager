@@ -11,11 +11,13 @@ import {
 import { CardComponent } from '../../components/card/card.component';
 import { TaskService } from '../../services/task.service';
 import { Task, TaskState } from '../../services/task.model';
+import { Observable } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-board-page',
   standalone: true,
-  imports: [RouterOutlet, AddTaskFormComponent, CdkDropList, CdkDrag, CardComponent],
+  imports: [RouterOutlet, AddTaskFormComponent, CdkDropList, CdkDrag, CardComponent, CommonModule],
   templateUrl: './board-page.component.html',
 })
 export class BoardPageComponent implements OnInit {
@@ -23,20 +25,20 @@ export class BoardPageComponent implements OnInit {
   completed: Task[] = [];
   inProgress: Task[] = [];
 
-  totalPlannedHours: number = 0;
-  totalInProgressHours: number = 0;
-  totalCompletedHours: number = 0;
+  plannedHours$: Observable<number>;
+  inProgressHours$: Observable<number>;
+  completedHours$: Observable<number>;
 
   constructor(private taskService: TaskService) {
     this.taskService.tasksSubject$.subscribe((tasks) => {
       this.planned = tasks.filter((task) => task.state === 'Planned');
       this.inProgress = tasks.filter((task) => task.state === 'InProgress');
       this.completed = tasks.filter((task) => task.state === 'Completed');
-
-      this.totalPlannedHours = this.planned.reduce((acc, task) => acc + task.estimate, 0);
-      this.totalInProgressHours = this.inProgress.reduce((acc, task) => acc + task.estimate, 0);
-      this.totalCompletedHours = this.completed.reduce((acc, task) => acc + task.estimate, 0);
     })
+
+    this.plannedHours$ = this.taskService.plannedHoursSubject$;
+    this.inProgressHours$ = this.taskService.inProgressHoursSubject$;
+    this.completedHours$ = this.taskService.completedHoursSubject$;
   }
 
   ngOnInit() {

@@ -2,7 +2,7 @@
   <div>
     <div class="flex items-center justify-around mb-4">
       <h2 class="text-xl font-bold">Planned</h2>
-      <p class="text-gray-600">Total hours: {{ totalPlannedHours }}</p>
+      <p class="text-gray-600">Total hours: {{ plannedHours$ | async }}</p>
     </div>
     <div
       id="Planned"
@@ -20,7 +20,7 @@
   <div>
     <div class="flex items-center justify-around mb-4">
       <h2 class="text-xl font-bold">In progress</h2>
-      <p class="text-gray-600">Total hours: {{ totalInProgressHours }}</p>
+      <p class="text-gray-600">Total hours: {{ inProgressHours$ | async }}</p>
     </div>
     <div
       id="InProgress"
@@ -38,7 +38,7 @@
   <div>
     <div class="flex items-center justify-around mb-4">
       <h2 class="text-xl font-bold">Completed</h2>
-      <p class="text-gray-600">Total hours: {{ totalCompletedHours }}</p>
+      <p class="text-gray-600">Total hours: {{ completedHours$ | async }}</p>
     </div>
     <div
       id="Completed"

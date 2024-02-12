@@ -1,1 +1,23 @@
-<app-list-card *ngFor="let item of items$ | async" [item]="item"></app-list-card>
+<div class="grid grid-cols-2 gap-4">
+  <div class="w-full">
+    <app-list-card *ngFor="let item of items$ | async" [item]="item"></app-list-card>
+  </div>
+  <div class="relative">
+    <div class="sticky top-0 flex justify-center">
+      <canvas
+        baseChart
+        [type]="'pie'"
+        [datasets]="[ {
+          data: [ plannedHours$ | async, inProgressHours$ | async, completedHours$ | async]
+        } ]"
+        [labels]="['Planned', 'In Progress', 'Completed' ]"
+        [options]="{
+          responsive: false,
+        }"
+        [plugins]="[]"
+        [legend]="true"
+      >
+      </canvas>
+    </div>
+  </div>
+</div>

@@ -12,7 +12,26 @@ export class TaskService {
   private _tasksSubjectSource = new BehaviorSubject<Task[]>([]);
   public tasksSubject$ = this._tasksSubjectSource.asObservable();
 
-  constructor(private http: HttpClient) {}
+  private _plannedCountSource = new BehaviorSubject<number>(0);
+  public plannedHoursSubject$ = this._plannedCountSource.asObservable();
+
+  private _inProgressCountSource = new BehaviorSubject<number>(0);
+  public inProgressHoursSubject$ = this._inProgressCountSource.asObservable();
+
+  private _completedCountSource = new BehaviorSubject<number>(0);
+  public completedHoursSubject$ = this._completedCountSource.asObservable();
+
+  constructor(private http: HttpClient) {
+    this.tasksSubject$.subscribe((tasks) => {
+      this._plannedCountSource.next(tasks.filter((task) => task.state === 'Planned').reduce((acc, task) => acc + task.estimate, 0));
+    })
+    this.tasksSubject$.subscribe((tasks) => {
+      this._inProgressCountSource.next(tasks.filter((task) => task.state === 'InProgress').reduce((acc, task) => acc + task.estimate, 0));
+    })
+    this.tasksSubject$.subscribe((tasks) => {
+      this._completedCountSource.next(tasks.filter((task) => task.state === 'Completed').reduce((acc, task) => acc + task.estimate, 0));
+    })
+  }
 
   getTasks() {
     return this.http.get('/tasks')
