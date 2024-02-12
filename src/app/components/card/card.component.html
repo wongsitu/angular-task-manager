@@ -1,4 +1,4 @@
-<div class="card bg-white p-4 rounded shadow mb-4 relative">
+<div class="card bg-white p-4 rounded shadow mb-4 relative cursor-pointer">
   <button class="close-button absolute top-2 right-2 text-gray-600 hover:text-red-500" (click)="deleteCard()">X</button>
   <ng-container *ngIf="!isEditing; else editMode">
     <h2 class="text-xl font-bold">Name: {{ item.name }}</h2>

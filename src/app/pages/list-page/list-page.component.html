@@ -3,8 +3,9 @@
     <app-list-card *ngFor="let item of items$ | async" [item]="item"></app-list-card>
   </div>
   <div class="relative">
-    <div class="sticky top-0 flex justify-center">
+    <div class="sticky top-0 flex flex-col justify-center items-center">
       <canvas
+        class="mb-8"
         baseChart
         [type]="'pie'"
         [datasets]="[ {
@@ -15,6 +16,22 @@
           responsive: false,
         }"
         [plugins]="[]"
+        [legend]="true"
+      >
+      </canvas>
+      <canvas
+        baseChart
+        [height]="300"
+        [type]="'bar'"
+        [options]="{
+          responsive: false,
+        }"
+        [labels]="['Tasks']"
+        [datasets]="[
+          { data: [ plannedHours$ | async], label: 'Planned' },
+          { data: [ inProgressHours$ | async], label: 'In Progress' },
+          { data: [ completedHours$ | async], label: 'Completed' }
+        ]"
         [legend]="true"
       >
       </canvas>
