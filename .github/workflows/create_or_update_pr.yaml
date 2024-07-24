@@ -22,12 +22,19 @@ jobs:
           cdk_subcommand: "diff"
           actions_comment: false
 
+      - name: Generate S3 Bucket Name
+        uses: actions/github-script@v7
+        id: generate-branch-name
+        with:
+          script: return `${github.head_ref}`.toLowerCase().replace(/[^a-zA-Z0-9]/g, '').replace(/-+/g, '').substring(0, 63) + "." + '${github.actor}';
+          result-encoding: string
+
       - name: cdk deploy
         uses: youyo/aws-cdk-github-actions@v2
         with:
           cdk_subcommand: "deploy"
           cdk_stack: "*"
-          cdk_args: "--parameters BucketName=${{ github.head_ref }} --require-approval never"
+          cdk_args: "--parameters BucketName=${{ steps.generate-branch-name.outputs.result }} --require-approval never"
           actions_comment: false
 
       - name: cdk synth
