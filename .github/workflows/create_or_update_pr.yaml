@@ -20,14 +20,14 @@ jobs:
         uses: youyo/aws-cdk-github-actions@v2
         with:
           cdk_subcommand: "diff"
-          actions_comment: true
+          actions_comment: false
 
       - name: cdk deploy
         uses: youyo/aws-cdk-github-actions@v2
         with:
           cdk_subcommand: "deploy"
           cdk_stack: "*"
-          cdk_args: "--require-approval never"
+          cdk_args: "--parameters BucketName=${{ github.head_ref }} --require-approval never"
           actions_comment: false
 
       - name: cdk synth
