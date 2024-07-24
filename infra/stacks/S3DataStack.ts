@@ -3,7 +3,7 @@ import { AnyPrincipal, Effect, PolicyStatement } from 'aws-cdk-lib/aws-iam';
 import { Bucket, IBucket } from 'aws-cdk-lib/aws-s3';
 import { Construct } from 'constructs';
 
-export class DataStack extends Stack {
+export class S3DataStack extends Stack {
   public readonly deploymentBucket: IBucket;
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);

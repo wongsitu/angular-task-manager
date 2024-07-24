@@ -1,9 +1,9 @@
 import { App } from 'aws-cdk-lib';
-import { DataStack } from './stacks/DataStack';
+import { S3DataStack } from './stacks/S3DataStack';
 import { DeploymentStack } from './stacks/DeploymentStack';
 
 const app = new App();
-const dataStack = new DataStack(app, 'DataStack');
+const s3DataStack = new S3DataStack(app, 'S3DataStack');
 new DeploymentStack(app, 'DeploymentStack', {
-  deploymentBucket: dataStack.deploymentBucket,
+  deploymentBucket: s3DataStack.deploymentBucket,
 });
