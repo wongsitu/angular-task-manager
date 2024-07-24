@@ -57,3 +57,12 @@ export const putEndpoints = {
     ZodResponseParser: PostsSchema,
   },
 } as const;
+
+export const deleteEndpoints = {
+  '/user/:id': {
+    ZodResponseParser: UserSchema,
+  },
+  '/posts/:id': {
+    ZodResponseParser: PostsSchema,
+  },
+} as const;

@@ -1,4 +1,10 @@
-import { getEndpoints, patchEndpoints, postEndpoints } from './endpoints';
+import {
+  deleteEndpoints,
+  getEndpoints,
+  patchEndpoints,
+  postEndpoints,
+  putEndpoints,
+} from './endpoints';
 
 type ParamTypes<T extends string> =
   T extends `${infer Before}:${infer Param}/${infer After}`
@@ -48,6 +54,20 @@ type PatchParamsType<
   body: ReturnType<K['ZodPayloadParser']['parse']>;
 };
 
+type PutParamsType<
+  T extends keyof typeof putEndpoints,
+  K extends (typeof putEndpoints)[T]
+> = {
+  endpoint: T;
+  pathParams: RouteParams<T>;
+  body: ReturnType<K['ZodPayloadParser']['parse']>;
+};
+
+type DeleteParamsType<T extends keyof typeof deleteEndpoints> = {
+  endpoint: T;
+  pathParams: RouteParams<T>;
+};
+
 export type GetArgs<
   T extends keyof typeof getEndpoints,
   K extends (typeof getEndpoints)[T]
@@ -70,3 +90,11 @@ export type PatchArgs<
   T extends keyof typeof patchEndpoints,
   K extends (typeof patchEndpoints)[T]
 > = PatchParamsType<T, K>;
+
+export type PutArgs<
+  T extends keyof typeof putEndpoints,
+  K extends (typeof putEndpoints)[T]
+> = PutParamsType<T, K>;
+
+export type DeleteArgs<T extends keyof typeof deleteEndpoints> =
+  DeleteParamsType<T>;
