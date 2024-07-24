@@ -2,8 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { getEndpoints, patchEndpoints, postEndpoints } from './endpoints';
-import { GetArgs, PatchArgs, PostArgs } from './types';
+import {
+  deleteEndpoints,
+  getEndpoints,
+  patchEndpoints,
+  postEndpoints,
+  putEndpoints,
+} from './endpoints';
+import { DeleteArgs, GetArgs, PatchArgs, PostArgs } from './types';
 
 @Injectable({
   providedIn: 'root',
@@ -16,10 +22,7 @@ export class EntityService {
 
     if (pathParams) {
       for (const key in pathParams) {
-        endpointValue = endpoint.replace(
-          `:${key}`,
-          `${(pathParams as any)[key]}`
-        );
+        endpointValue = endpoint.replace(`:${key}`, `${pathParams[key]}`);
       }
     }
 
@@ -31,7 +34,7 @@ export class EntityService {
     ...rest
   }: GetArgs<T, (typeof getEndpoints)[T]>) {
     const { ZodResponseParser, ZodQueryParamsParser } = getEndpoints[endpoint];
-    const endpointValue: string =
+    const endpointValue =
       'pathParams' in rest && rest.pathParams
         ? this._parseEndpoint(endpoint, rest.pathParams)
         : endpoint;
@@ -53,7 +56,7 @@ export class EntityService {
     ...rest
   }: PostArgs<T, (typeof postEndpoints)[T]>) {
     const { ZodResponseParser, ZodPayloadParser } = postEndpoints[endpoint];
-    const endpointValue: string =
+    const endpointValue =
       'pathParams' in rest && rest.pathParams
         ? this._parseEndpoint(endpoint, rest.pathParams)
         : endpoint;
@@ -74,7 +77,7 @@ export class EntityService {
     ...rest
   }: PatchArgs<T, (typeof patchEndpoints)[T]>) {
     const { ZodResponseParser, ZodPayloadParser } = patchEndpoints[endpoint];
-    const endpointValue: string =
+    const endpointValue =
       'pathParams' in rest && rest.pathParams
         ? this._parseEndpoint(endpoint, rest.pathParams)
         : endpoint;
@@ -86,6 +89,44 @@ export class EntityService {
       )
       .pipe(map((response) => ZodResponseParser.parse(response))) as Observable<
       ReturnType<(typeof patchEndpoints)[T]['ZodResponseParser']['parse']>
+    >;
+  }
+
+  put<T extends keyof typeof putEndpoints>({
+    endpoint,
+    body,
+    ...rest
+  }: PatchArgs<T, (typeof putEndpoints)[T]>) {
+    const { ZodResponseParser, ZodPayloadParser } = putEndpoints[endpoint];
+    const endpointValue =
+      'pathParams' in rest && rest.pathParams
+        ? this._parseEndpoint(endpoint, rest.pathParams)
+        : endpoint;
+
+    return this.http
+      .patch(
+        endpointValue,
+        ZodPayloadParser ? ZodPayloadParser.parse(rest) : undefined
+      )
+      .pipe(map((response) => ZodResponseParser.parse(response))) as Observable<
+      ReturnType<(typeof putEndpoints)[T]['ZodResponseParser']['parse']>
+    >;
+  }
+
+  delete<T extends keyof typeof deleteEndpoints>({
+    endpoint,
+    ...rest
+  }: DeleteArgs<T>) {
+    const { ZodResponseParser } = deleteEndpoints[endpoint];
+    const endpointValue =
+      'pathParams' in rest && rest.pathParams
+        ? this._parseEndpoint(endpoint, rest.pathParams)
+        : endpoint;
+
+    return this.http
+      .delete(endpointValue)
+      .pipe(map((response) => ZodResponseParser.parse(response))) as Observable<
+      ReturnType<(typeof deleteEndpoints)[T]['ZodResponseParser']['parse']>
     >;
   }
 }
