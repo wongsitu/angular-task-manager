@@ -16,7 +16,7 @@ export class S3DataStack extends Stack {
     this.deploymentBucket = new Bucket(this, 'DeploymentBucket', {
       bucketName: bucketName.valueAsString,
       publicReadAccess: true,
-      websiteIndexDocument: 'browser/index.html',
+      websiteIndexDocument: 'index.html',
       blockPublicAccess: {
         blockPublicAcls: false,
         blockPublicPolicy: false,
