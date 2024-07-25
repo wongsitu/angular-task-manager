@@ -6,6 +6,7 @@ name: Create S3 Environment
 jobs:
   create_or_update_pr_env:
     runs-on: ubuntu-latest
+    permissions: write-all
     steps:
       - name: Checkout
         uses: actions/checkout@v2
