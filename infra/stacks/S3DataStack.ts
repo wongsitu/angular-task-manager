@@ -1,5 +1,5 @@
 import { CfnParameter, Stack, StackProps } from 'aws-cdk-lib';
-import { AnyPrincipal, Effect, PolicyStatement } from 'aws-cdk-lib/aws-iam';
+// import { AnyPrincipal, Effect, PolicyStatement } from 'aws-cdk-lib/aws-iam';
 import { Bucket, IBucket } from 'aws-cdk-lib/aws-s3';
 import { Construct } from 'constructs';
 
@@ -25,16 +25,16 @@ export class S3DataStack extends Stack {
       },
     });
 
-    this.deploymentBucket.addToResourcePolicy(
-      new PolicyStatement({
-        actions: ['s3:GetObject'],
-        effect: Effect.ALLOW,
-        resources: [
-          '',
-          `arn:aws:s3:::${this.deploymentBucket.bucketName}.vitruvi/*`,
-        ],
-        principals: [new AnyPrincipal()],
-      })
-    );
+    // this.deploymentBucket.addToResourcePolicy(
+    //   new PolicyStatement({
+    //     actions: ['s3:GetObject'],
+    //     effect: Effect.ALLOW,
+    //     resources: [
+    //       '',
+    //       `arn:aws:s3:::${this.deploymentBucket.bucketName}.vitruvi/*`,
+    //     ],
+    //     principals: [new AnyPrincipal()],
+    //   })
+    // );
   }
 }
