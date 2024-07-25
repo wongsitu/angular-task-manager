@@ -19,6 +19,7 @@ export class DeploymentStack extends Stack {
       bucketName: bucketName.valueAsString,
       publicReadAccess: true,
       websiteIndexDocument: 'index.html',
+      autoDeleteObjects: true,
       blockPublicAccess: {
         blockPublicAcls: false,
         blockPublicPolicy: false,
