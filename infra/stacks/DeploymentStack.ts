@@ -27,7 +27,7 @@ export class DeploymentStack extends Stack {
       },
     });
 
-    const buildDir = join(__dirname, '..', '..', 'dist');
+    const buildDir = join(__dirname, '..', '..', 'dist', 'task-tracker');
 
     if (existsSync(buildDir)) {
       new BucketDeployment(this, 'task-tracker-deployment', {
