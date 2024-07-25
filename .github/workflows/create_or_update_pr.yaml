@@ -16,18 +16,18 @@ jobs:
       - name: Build Site
         run: npm run build
 
-      - name: cdk diff
-        uses: youyo/aws-cdk-github-actions@v2
-        with:
-          cdk_subcommand: "diff"
-          actions_comment: false
-
       - uses: actions/github-script@v7
         id: generate-branch-name
         with:
           script: |
             return `${{ github.head_ref }}`.toLowerCase().replace(/[^a-z0-9-]/g, '-').substring(0, 63) + "." + `${{ github.actor }}`;
           result-encoding: string
+
+      - name: cdk diff
+        uses: youyo/aws-cdk-github-actions@v2
+        with:
+          cdk_subcommand: "diff"
+          actions_comment: false
 
       - name: cdk deploy
         uses: youyo/aws-cdk-github-actions@v2
@@ -42,3 +42,4 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      STACK_NAME: ${{ steps.generate-branch-name.outputs.result }}
