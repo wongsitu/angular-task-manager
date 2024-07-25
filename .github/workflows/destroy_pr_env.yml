@@ -10,18 +10,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - uses: actions/github-script@v7
-        id: generate-branch-name
-        with:
-          script: |
-            return `${{ github.head_ref }}`.toLowerCase().replace(/[^a-z0-9-]/g, '-').substring(0, 63) + "-" + `${{ github.actor }}`;
-          result-encoding: string
-
       - name: cdk destroy
         uses: youyo/aws-cdk-github-actions@v2
         with:
           cdk_subcommand: "destroy"
-          cdk_stack: "*"
           cdk_args: "--force"
           actions_comment: true
 
