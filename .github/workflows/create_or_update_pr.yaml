@@ -51,9 +51,25 @@ jobs:
             });
             const commentPrefix = 'AWS S3 Link:';
             const comment = comments.find(comment => comment.user.login === 'github-actions[bot]' && comment.body.includes(commentPrefix));
+            const WEBSITE_LINK = `http://${{ env.STACK_NAME }}.s3-website-${{ env.AWS_DEFAULT_REGION }}.amazonaws.com/`;
+
+            if (comment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: comment.id,
+                body: `${commentPrefix} [${WEBSITE_LINK}](${WEBSITE_LINK.replace(/"/gs, '')})` ,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: `${commentPrefix} [${WEBSITE_LINK}](${WEBSITE_LINK.replace(/"/gs, '')})` ,
+              });
+            }
         env:
-          RUN_NUMBER: ${{ github.run_number }}
-          RUN_ID: ${{ github.run_id }}
+          STACK_NAME: ${{ steps.generate-branch-name.outputs.result }}
 
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
