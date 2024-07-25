@@ -22,10 +22,8 @@ jobs:
         with:
           cdk_subcommand: "destroy"
           cdk_stack: "*"
-          cdk_args: "--parameters BucketName=${{ env.STACK_NAME }} --require-approval never"
+          cdk_args: "--force"
           actions_comment: true
-        env:
-          STACK_NAME: ${{ steps.generate-branch-name.outputs.result }}
 
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
