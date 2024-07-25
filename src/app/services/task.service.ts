@@ -57,7 +57,6 @@ export class TaskService {
 
   createTask(task: Task) {
     const payload = TaskSchema.parse(task);
-    console.log('hi');
     return this.http
       .post('/tasks', payload)
       .pipe(map((response) => TaskSchema.parse(response)))
