@@ -33,8 +33,8 @@ jobs:
         uses: youyo/aws-cdk-github-actions@v2
         with:
           cdk_subcommand: "deploy"
-          cdk_stack: "*"
-          cdk_args: "--parameters BucketName=${{ steps.generate-branch-name.outputs.result }} --require-approval never"
+          cdk_stack: "${{ env.STACK_NAME }}"
+          cdk_args: "--parameters BucketName=${{ env.STACK_NAME }} --require-approval never"
           actions_comment: true
         env:
           STACK_NAME: ${{ steps.generate-branch-name.outputs.result }}
