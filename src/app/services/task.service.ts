@@ -42,6 +42,7 @@ export class TaskService {
   }
 
   getTasks() {
+    console.log('Getting tasks');
     return this.http
       .get('/tasks')
       .pipe(map((response) => TaskListSchema.parse(response)))
