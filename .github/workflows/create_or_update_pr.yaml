@@ -20,13 +20,10 @@ jobs:
         id: generate-branch-name
         with:
           script: |
-            const formattedBranchName = `${{ github.head_ref }}`.toLowerCase().replace(/[^a-z0-9-]/g, '-').substring(0, 63)`;
-
             return {
-              BucketName: formattedBranchName + "." + `${{ github.actor }}`
-              StackName: formattedBranchName
+              BucketName: `${{ github.head_ref }}`.toLowerCase().replace(/[^a-z0-9-]/g, '-').substring(0, 63) + "." + `${{ github.actor }}`
+              StackName: `${{ github.head_ref }}`.toLowerCase().replace(/[^a-z0-9-]/g, '-').substring(0, 63)
             };
-          result-encoding: string
 
       - name: cdk diff
         uses: youyo/aws-cdk-github-actions@v2
