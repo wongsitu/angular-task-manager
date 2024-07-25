@@ -26,7 +26,7 @@ jobs:
         id: generate-branch-name
         with:
           script: |
-            return `${{ github.head_ref }}`.toLowerCase().replace(/[^a-zA-Z0-9]/g, '').replace(/-+/g, '').substring(0, 63) + "." + `${{ github.actor }}`;
+            return `${{ github.head_ref }}`.toLowerCase().replace(/[^a-z0-9-]/g, '-').substring(0, 63) + "." + `${{ github.actor }}`;
           result-encoding: string
 
       - name: cdk deploy
