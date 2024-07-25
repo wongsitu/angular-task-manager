@@ -21,7 +21,7 @@ jobs:
         uses: youyo/aws-cdk-github-actions@v2
         with:
           cdk_subcommand: "destroy"
-          cdk_stack: "${{ env.STACK_NAME }}"
+          cdk_stack: "*"
           cdk_args: "--parameters BucketName=${{ env.STACK_NAME }} --require-approval never"
           actions_comment: true
         env:
