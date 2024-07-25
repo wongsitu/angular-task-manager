@@ -10,39 +10,34 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      # - name: Install Dependencies
-      #   run: npm ci
+      - name: Install Dependencies
+        run: npm ci
 
-      # - name: Build Site
-      #   run: npm run build
+      - name: Build Site
+        run: npm run build
 
       - uses: actions/github-script@v7
         id: generate-branch-name
         with:
           script: |
-            return {
-              BucketName: `${{ github.head_ref }}`.toLowerCase().replace(/[^a-z0-9-]/g, '-').substring(0, 63) + "." + `${{ github.actor }}`,
-              StackName: `${{ github.head_ref }}`.toLowerCase().replace(/[^a-z0-9-]/g, '-').substring(0, 63)
-            };
+            return `${{ github.head_ref }}`.toLowerCase().replace(/[^a-z0-9-]/g, '-').substring(0, 63) + "-" + `${{ github.actor }}`;
+          result-encoding: string
 
-      - name: Get result
-        run: echo "${{steps.generate-branch-name.result}}"
+      - name: cdk diff
+        uses: youyo/aws-cdk-github-actions@v2
+        with:
+          cdk_subcommand: "diff"
+          actions_comment: false
 
-      # - name: cdk diff
-      #   uses: youyo/aws-cdk-github-actions@v2
-      #   with:
-      #     cdk_subcommand: "diff"
-      #     actions_comment: false
-
-      # - name: cdk deploy
-      #   uses: youyo/aws-cdk-github-actions@v2
-      #   with:
-      #     cdk_subcommand: "deploy"
-      #     cdk_stack: "*"
-      #     cdk_args: "--parameters BucketName=${{ steps.generate-branch-name.outputs.result.BucketName }} --require-approval never"
-      #     actions_comment: true
-      #   env:
-      #     STACK_NAME: ${{ steps.generate-branch-name.outputs.result.StackName }}
+      - name: cdk deploy
+        uses: youyo/aws-cdk-github-actions@v2
+        with:
+          cdk_subcommand: "deploy"
+          cdk_stack: "*"
+          cdk_args: "--parameters BucketName=${{ steps.generate-branch-name.outputs.result }} --require-approval never"
+          actions_comment: true
+        env:
+          STACK_NAME: ${{ steps.generate-branch-name.outputs.result }}
 
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
