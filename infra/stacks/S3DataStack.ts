@@ -1,18 +1,19 @@
-import { Stack, StackProps } from 'aws-cdk-lib';
+import { CfnParameter, Stack, StackProps } from 'aws-cdk-lib';
 import { Bucket, IBucket } from 'aws-cdk-lib/aws-s3';
 import { Construct } from 'constructs';
 
-interface S3DataStackProps extends StackProps {
-  bucketName: string;
-}
-
 export class S3DataStack extends Stack {
   public readonly deploymentBucket: IBucket;
-  constructor(scope: Construct, id: string, props: S3DataStackProps) {
+  constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
+    const bucketName = new CfnParameter(this, 'BucketName', {
+      type: 'String',
+      description: 'The name of the branch to deploy the frontend to',
+    });
+
     this.deploymentBucket = new Bucket(this, 'DeploymentBucket', {
-      bucketName: props.bucketName,
+      bucketName: bucketName.valueAsString,
       publicReadAccess: true,
       websiteIndexDocument: 'index.html',
       blockPublicAccess: {
