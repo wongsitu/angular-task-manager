@@ -1,28 +1,42 @@
-import { CfnOutput, Stack, StackProps } from 'aws-cdk-lib';
-import { IBucket } from 'aws-cdk-lib/aws-s3';
+import { CfnOutput, CfnParameter, Stack, StackProps } from 'aws-cdk-lib';
+import { Bucket, IBucket } from 'aws-cdk-lib/aws-s3';
 import { BucketDeployment, Source } from 'aws-cdk-lib/aws-s3-deployment';
 import { Construct } from 'constructs';
 import { existsSync } from 'fs';
 import { join } from 'path';
 
-interface DeploymentStackProps extends StackProps {
-  deploymentBucket: IBucket;
-}
-
 export class DeploymentStack extends Stack {
-  constructor(scope: Construct, id: string, props: DeploymentStackProps) {
+  public readonly deploymentBucket: IBucket;
+  constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
+
+    const bucketName = new CfnParameter(this, 'BucketName', {
+      type: 'String',
+      description: 'The name of the branch to deploy the frontend to',
+    });
+
+    this.deploymentBucket = new Bucket(this, 'DeploymentBucket', {
+      bucketName: bucketName.valueAsString,
+      publicReadAccess: true,
+      websiteIndexDocument: 'index.html',
+      blockPublicAccess: {
+        blockPublicAcls: false,
+        blockPublicPolicy: false,
+        ignorePublicAcls: false,
+        restrictPublicBuckets: false,
+      },
+    });
 
     const buildDir = join(__dirname, '..', '..', 'dist');
 
     if (existsSync(buildDir)) {
       new BucketDeployment(this, 'task-tracker-deployment', {
-        destinationBucket: props.deploymentBucket,
+        destinationBucket: this.deploymentBucket,
         sources: [Source.asset(buildDir)],
       });
 
       new CfnOutput(this, 'task-tracker-deploymentS3Url', {
-        value: props.deploymentBucket.bucketWebsiteUrl,
+        value: this.deploymentBucket.bucketWebsiteUrl,
       });
     } else {
       console.warn('Ui directory not found: ' + buildDir);
