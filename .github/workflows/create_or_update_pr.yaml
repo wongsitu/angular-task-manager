@@ -20,7 +20,12 @@ jobs:
         id: generate-branch-name
         with:
           script: |
-            return `${{ github.head_ref }}`.toLowerCase().replace(/[^a-z0-9-]/g, '-').substring(0, 63) + "." + `${{ github.actor }}`;
+            const formattedBranchName = `${{ github.head_ref }}`.toLowerCase().replace(/[^a-z0-9-]/g, '-').substring(0, 63)`;
+
+            return {
+              BucketName: formattedBranchName + "." + `${{ github.actor }}`
+              StackName: formattedBranchName
+            };
           result-encoding: string
 
       - name: cdk diff
@@ -34,10 +39,10 @@ jobs:
         with:
           cdk_subcommand: "deploy"
           cdk_stack: "*"
-          cdk_args: "--parameters BucketName=${{ steps.generate-branch-name.outputs.result }} --require-approval never"
+          cdk_args: "--parameters BucketName=${{ steps.generate-branch-name.outputs.result.BucketName }} --require-approval never"
           actions_comment: true
         env:
-          STACK_NAME: ${{ steps.generate-branch-name.outputs.result }}
+          STACK_NAME: ${{ steps.generate-branch-name.outputs.result.StackName }}
 
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
