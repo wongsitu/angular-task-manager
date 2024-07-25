@@ -1,4 +1,10 @@
-import { CfnOutput, CfnParameter, Stack, StackProps } from 'aws-cdk-lib';
+import {
+  CfnOutput,
+  CfnParameter,
+  RemovalPolicy,
+  Stack,
+  StackProps,
+} from 'aws-cdk-lib';
 import { Bucket, IBucket } from 'aws-cdk-lib/aws-s3';
 import { BucketDeployment, Source } from 'aws-cdk-lib/aws-s3-deployment';
 import { Construct } from 'constructs';
@@ -20,6 +26,7 @@ export class DeploymentStack extends Stack {
       publicReadAccess: true,
       websiteIndexDocument: 'index.html',
       autoDeleteObjects: true,
+      removalPolicy: RemovalPolicy.DESTROY,
       blockPublicAccess: {
         blockPublicAcls: false,
         blockPublicPolicy: false,
