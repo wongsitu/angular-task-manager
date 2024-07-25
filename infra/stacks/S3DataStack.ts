@@ -31,7 +31,7 @@ export class S3DataStack extends Stack {
         effect: Effect.ALLOW,
         resources: [
           '',
-          `arn:aws:s3:::${this.deploymentBucket.bucketName}.vitruvi.cc/*`,
+          `arn:aws:s3:::${this.deploymentBucket.bucketName}.vitruvi/*`,
         ],
         principals: [new AnyPrincipal()],
       })
