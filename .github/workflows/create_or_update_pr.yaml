@@ -49,28 +49,6 @@ jobs:
               repo: context.repo.repo,
               issue_number: context.issue.number,
             });
-            const commentPrefix = 'AWS S3 Link:';
-            const comment = comments.find(comment => comment.user.login === 'github-actions[bot]' && comment.body.includes(commentPrefix));
-
-            if (comment) {
-              # console.log("Update Comment");
-              # await github.issues.updateComment({
-              #   owner: context.repo.owner,
-              #   repo: context.repo.repo,
-              #   comment_id: comment.id,
-              #   body: `${commentPrefix} (
-              #     ${context.payload.repository.html_url}/actions/runs/${context.runId})`,
-              # });
-            } else {
-              # console.log("Create Comment");
-              # await github.issues.createComment({
-              #   owner: context.repo.owner,
-              #   repo: context.repo.repo,
-              #   issue_number: context.issue.number,
-              #   body: `${commentPrefix} (
-              #     ${context.payload.repository.html_url}/actions/runs/${context.runId})`,
-              # });
-            }
         env:
           RUN_NUMBER: ${{ github.run_number }}
           RUN_ID: ${{ github.run_id }}
