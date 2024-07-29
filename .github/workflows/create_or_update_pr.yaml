@@ -6,6 +6,7 @@ name: Create S3 Environment
 jobs:
   create_or_update_pr_env:
     runs-on: ubuntu-latest
+    permissions: write-all
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -36,6 +37,39 @@ jobs:
           cdk_stack: "${{ env.STACK_NAME }}"
           cdk_args: "--parameters BucketName=${{ env.STACK_NAME }} --require-approval never"
           actions_comment: false
+        env:
+          STACK_NAME: ${{ steps.generate-branch-name.outputs.result }}
+
+      - name: Update or Create PR Comment
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            const commentPrefix = 'AWS S3 Link:';
+            const comment = comments.find(comment => comment.user.login === 'github-actions[bot]' && comment.body.includes(commentPrefix));
+            const WEBSITE_LINK = `http://${{ env.STACK_NAME }}.s3-website-${{ env.AWS_DEFAULT_REGION }}.amazonaws.com/`;
+            const message = `${commentPrefix} [${WEBSITE_LINK}](${WEBSITE_LINK.replace(/"/gs, '')})`;
+
+            if (comment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: comment.id,
+                body: message,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: message,
+              });
+            }
         env:
           STACK_NAME: ${{ steps.generate-branch-name.outputs.result }}
 
