@@ -56,6 +56,7 @@ export class TaskService {
   }
 
   createTask(task: Task) {
+    console.log('Creating task:', task);
     const payload = TaskSchema.parse(task);
     return this.http
       .post('/tasks', payload)
