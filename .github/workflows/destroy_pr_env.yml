@@ -34,6 +34,3 @@ jobs:
         run: cdk destroy ${{ env.STACK_NAME }} --force
         env:
           STACK_NAME: ${{ steps.generate-branch-name.outputs.result }}
-
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
