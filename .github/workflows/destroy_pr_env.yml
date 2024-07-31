@@ -31,7 +31,7 @@ jobs:
           result-encoding: string
 
       - name: CDK destroy
-        run: cdk destroy ${{ steps.generate-branch-name.outputs.result }} --force
+        run: cdk destroy --all --force
 
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
